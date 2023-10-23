@@ -9,7 +9,6 @@ import ru.kata.rmaxer.model.User;
 import java.util.List;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService{
     private final UserDAO userDAO;
 
@@ -31,16 +30,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public void createUser(User user) {
         userDAO.createUser(user);
     }
 
     @Override
+    @Transactional
     public void updateUser(User user) {
         userDAO.updateUser(user);
     }
 
     @Override
+    @Transactional
     public void removeUser(int id) {
         userDAO.removeUser(id);
     }
