@@ -1,8 +1,10 @@
 package ru.kata.rmaxer.config;
 
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -31,7 +33,17 @@ public class AppInit extends AbstractAnnotationConfigDispatcherServletInitialize
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
+        registerCharacterEncodingFilter(servletContext);
         registerHiddenFieldFilter(servletContext);
+    }
+
+    private void registerCharacterEncodingFilter(ServletContext servletContext) {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        FilterRegistration.Dynamic characterEncoding = servletContext
+                .addFilter("characterEncoding", characterEncodingFilter);
+        characterEncoding.addMappingForUrlPatterns(null, true, "/*");
     }
 
     private void registerHiddenFieldFilter(ServletContext servletContext) {

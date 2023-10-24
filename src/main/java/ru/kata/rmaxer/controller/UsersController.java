@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.rmaxer.model.User;
 import ru.kata.rmaxer.service.UserService;
 
-
 @Controller
 @RequestMapping("/users")
 public class UsersController {
