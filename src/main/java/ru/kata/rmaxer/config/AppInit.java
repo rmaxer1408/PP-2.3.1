@@ -4,9 +4,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import javax.servlet.Filter;
 
 public class AppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -19,9 +17,7 @@ public class AppInit extends AbstractAnnotationConfigDispatcherServletInitialize
     // Добавление конфигурации, в которой инициализируем ViewResolver, для корректного отображения jsp.
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[]{
-                WebConfig.class
-        };
+        return new Class<?>[]{WebConfig.class};
     }
 
     /* Данный метод указывает url, на котором будет базироваться приложение */
@@ -31,23 +27,10 @@ public class AppInit extends AbstractAnnotationConfigDispatcherServletInitialize
     }
 
     @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        super.onStartup(servletContext);
-        registerCharacterEncodingFilter(servletContext);
-        registerHiddenFieldFilter(servletContext);
-    }
-
-    private void registerCharacterEncodingFilter(ServletContext servletContext) {
-        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-        characterEncodingFilter.setEncoding("UTF-8");
-        characterEncodingFilter.setForceEncoding(true);
-        FilterRegistration.Dynamic characterEncoding = servletContext
-                .addFilter("characterEncoding", characterEncodingFilter);
-        characterEncoding.addMappingForUrlPatterns(null, true, "/*");
-    }
-
-    private void registerHiddenFieldFilter(ServletContext servletContext) {
-        servletContext.addFilter("hiddenHttpMethodFilter", new HiddenHttpMethodFilter())
-                .addMappingForUrlPatterns(null, true, "/*");
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+        return new Filter[] {filter, new HiddenHttpMethodFilter()};
     }
 }
